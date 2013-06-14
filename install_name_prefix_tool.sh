@@ -23,19 +23,22 @@
 
 if [ $# -lt 3 ] 
 then 
-	echo "Usage: ${0##*/} <DIR> <OLD> <NEW>"
-	echo "Changes the library prefix from OLD to NEW for each <DIR>/*.dylib."
+	echo "Usage: ${0##*/} <DIR|FILE> <OLD> <NEW>"
+	echo "Changes the library prefix from OLD to NEW for each <DIR>/*.dylib or executable <FILE>."
 	exit 1
 fi
 
-DIRECTORY=$1
+TARGETS=$1
 PREFIX=$2
 NEWPREFIX=$3
 
-if [ ! -d $DIRECTORY ] 
-then 
-	echo "Error: \"$DIRECTORY\" does not exist." 
-	exit 1
+if [[ -d $TARGETS ]]; then
+	TARGETS=$TARGETS/*.dylib
+elif [[ -f $TARGETS ]]; then
+	TARGETS="$TARGETS"
+else
+    echo "Error: \"$TARGETS\" does not exist." 
+    exit 1
 fi
 
 if [ ! -d $PREFIX ] 
@@ -48,7 +51,7 @@ INSTALL_NAME_TOOL_BIN=$(which install_name_tool)
 OTOOL_BIN=$(which otool)
 GREP_BIN=$(which egrep)
 
-for lib in $IRECTORY/*.dylib;
+for lib in $TARGETS;
 do
 	echo "Modifing library \"$lib\"..."
 	lib_basename=$(basename $lib)
