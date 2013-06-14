@@ -67,5 +67,3 @@ do
 		$INSTALL_NAME_TOOL_BIN -change $entry $entry_target $ID_ADD $lib
 	done
 done
-
-exit 0
