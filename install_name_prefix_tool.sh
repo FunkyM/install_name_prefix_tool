@@ -46,13 +46,13 @@ fi
 
 INSTALL_NAME_TOOL_BIN=$(which install_name_tool)
 OTOOL_BIN=$(which otool)
-GREP_BIN=$(which grep)
+GREP_BIN=$(which egrep)
 
 for lib in $IRECTORY/*.dylib;
 do
 	echo "Modifing library \"$lib\"..."
 	lib_basename=$(basename $lib)
-	for entry in $($OTOOL_BIN -L $lib | $GREP -Po "$PREFIX/([^[:space:]]*)");
+	for entry in $($OTOOL_BIN -L $lib | $GREP_BIN -o "$PREFIX/([^[:space:]]*)");
 	do
 		entry_basename=$(basename $entry)
 		entry_target="$NEWPREFIX/$entry_basename"
