@@ -1,14 +1,14 @@
 install_name\_prefix\_tool
 ========================
 
-Shell script for Mac OS X which changes the library prefix for a series of shared libraries in a folder.
+Shell script for Mac OS X which changes the library prefix for a series of shared libraries in a folder or a single executable.
 
 Overview
 --------
 
 This is a simple bash script which processes a series of Mac OS X shared libraries (.dylib) in a directory and uses [install\_name\_tool](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/install_name_tool.1.html) to modify the binary library link names.
 
-The use-case for this script is usually to modify a series of existing shared libraries for loading from a relative location.
+The use-case for this script is usually to modify a series of existing shared libraries or an executable for loading from a relative location.
 
 Example
 -------
@@ -21,7 +21,11 @@ Using this script, you can now modify all of the library links at once for insta
 <pre>
 $ install_name_prefix_tool.sh ./lib /usr/local/lib @executable_path/lib
 </pre>
+Finally you must also modify the loader path for your application to pick up the shared libraries from the relative "lib/" folder.
+<pre>
+$ install_name_prefix_tool.sh ./myapplication /usr/local/lib @executable_path/lib
+</pre>
 
-If you now verify the links using otool again, you'll notice that it now uses the new prefix to lookup dependent libraries.
+If you now verify the links using otool again, you'll notice that it now uses the new prefix to lookup dependent libraries which will be relative to your main executable due to the special token "@executable_path".
 
 Handy, ain't it?
